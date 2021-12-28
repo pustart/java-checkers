@@ -1,8 +1,9 @@
 package ru.vsu.pustoslov.java.colors;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public enum GeneralColors {
+public enum GeneralColors implements Serializable {
     BLACK_CELL(new Color(210, 140, 69)),
     WHITE_CELL(new Color(255, 206, 158)),
     HIGHLIGHTING(new Color(106, 196, 104));

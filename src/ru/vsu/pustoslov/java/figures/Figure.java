@@ -1,12 +1,13 @@
 package ru.vsu.pustoslov.java.figures;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import ru.vsu.pustoslov.java.colors.CheckerColors;
 import ru.vsu.pustoslov.java.board.Board;
 import ru.vsu.pustoslov.java.board.Cell;
 import java.util.List;
 
-public abstract class Figure implements Comparable<Figure> {
+public abstract class Figure implements Comparable<Figure>, Serializable {
     private int x;
     private int y;
     private CheckerColors color;

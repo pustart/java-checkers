@@ -1,9 +1,10 @@
 package ru.vsu.pustoslov.java.board;
 
+import java.io.Serializable;
 import ru.vsu.pustoslov.java.colors.GeneralColors;
 import ru.vsu.pustoslov.java.figures.Figure;
 
-public class Cell {
+public class Cell implements Serializable {
     private final int height;
     private final int width;
     private final int x;

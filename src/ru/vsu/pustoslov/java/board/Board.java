@@ -1,5 +1,6 @@
 package ru.vsu.pustoslov.java.board;
 
+import java.io.Serializable;
 import ru.vsu.pustoslov.java.colors.CheckerColors;
 import ru.vsu.pustoslov.java.colors.GeneralColors;
 import ru.vsu.pustoslov.java.figures.Checker;
@@ -7,7 +8,7 @@ import ru.vsu.pustoslov.java.figures.Figure;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board {
+public class Board implements Serializable {
     public static final int SIZE = 8;
     private final int height;
     private final int width;

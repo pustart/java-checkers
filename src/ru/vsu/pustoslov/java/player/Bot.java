@@ -5,7 +5,6 @@ import ru.vsu.pustoslov.java.figures.Figure;
 import ru.vsu.pustoslov.java.strategies.BotStrategy;
 import java.util.List;
 
-//Отличие от игрока в том, что бот в конструктор принимает стратегию
 public class Bot extends Player {
     private final BotStrategy strategy;
 

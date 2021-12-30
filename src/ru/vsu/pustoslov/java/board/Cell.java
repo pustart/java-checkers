@@ -8,12 +8,16 @@ public class Cell implements Serializable {
     private final int height;
     private final int width;
     private final int x;
+    private final int row;
+    private final int col;
     private final int y;
     private Figure figure = null;
 
     private GeneralColors cellColor;
 
-    public Cell(int x, int y, int height, GeneralColors cellColor) {
+    public Cell(int row, int col, int x, int y, int height, GeneralColors cellColor) {
+        this.row = row;
+        this.col = col;
         this.x = x;
         this.y = y;
         this.height = height;
@@ -21,14 +25,14 @@ public class Cell implements Serializable {
         this.cellColor = cellColor;
     }
 
-    public Cell(int x, int y, int height, GeneralColors cellColor, Figure figure) {
+/*    public Cell(int x, int y, int height, GeneralColors cellColor, Figure figure) {
         this.x = x;
         this.y = y;
         this.height = height;
         this.width = height;
         this.cellColor = cellColor;
         this.figure = figure;
-    }
+    }*/
 
     //Возможно лишний метод
     public boolean hasFigure() {
@@ -59,11 +63,28 @@ public class Cell implements Serializable {
         return y;
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
     public void setCellColor(GeneralColors cellColor) {
         this.cellColor = cellColor;
     }
 
     public void setFigure(Figure figure) {
         this.figure = figure;
+    }
+
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "row=" + row +
+                ", col=" + col +
+                ", cellColor=" + cellColor +
+                '}';
     }
 }

@@ -22,7 +22,7 @@ public class BotStrategy  {
                 attackersCheckers.add(figure);
             }
 
-            if (figure.getPossibleMoves(board).size() != 0) {
+            if (figure.getPossibleMoves(board).size() > 0) {
                 availableCheckers.add(figure);
             }
         }

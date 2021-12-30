@@ -23,6 +23,7 @@ public class CheckersMovement {
     }
 
     public void move(int row, int col, int prevRow, int prevCol, Player player) {
+
         if (!board.getCellFromBoard(prevRow, prevCol).hasFigure()) {
             return;
         }
@@ -39,6 +40,8 @@ public class CheckersMovement {
             return;
         }
 
+        System.out.println("In MOVE");
+        System.out.println("Player color: " + player.getTeamColor());
 
         if (canBecomeKing(row, col, prevRow, prevCol) && !(board.getCellFromBoard(prevRow, prevCol).getFigure() instanceof King)) {
             if (board.getCellFromBoard(prevRow, prevCol).getFigure().getColor() == CheckerColors.WHITE) {
@@ -58,15 +61,22 @@ public class CheckersMovement {
         }
 
         moveFlag = true;
+        System.out.println("Move flag into  MOVE: " + moveFlag);
+
     }
 
     public boolean hasMoved() {
+
         boolean flag = moveFlag;
-        moveFlag = false;
+        System.out.println("In hasMoved, move flag = " + flag);
+        resetMovedFlag();
+        System.out.println("In hasMoved, move flag reset = " + moveFlag);
+
         return flag;
     }
 
     public void beat(int row, int col, int prevRow, int prevCol, Player player) {
+
         if (!board.getCellFromBoard(prevRow, prevCol).hasFigure()) {
             return;
         }
@@ -88,6 +98,8 @@ public class CheckersMovement {
         }
 
         System.out.println("IN BEAT");
+        System.out.println("Player color: " + player.getTeamColor());
+
 
         if (canBecomeKing(row, col, prevRow, prevCol) && !(board.getCellFromBoard(prevRow, prevCol).getFigure() instanceof King)) {
             if (board.getCellFromBoard(prevRow, prevCol).getFigure().getColor() == CheckerColors.WHITE) {
@@ -148,6 +160,7 @@ public class CheckersMovement {
         }
 
         moveFlag = true;
+        System.out.println("Move flag into  BEAT: " + moveFlag);
     }
 
     public boolean isGameOver(Player player1, Player player2) {
@@ -166,5 +179,9 @@ public class CheckersMovement {
             }
         }
         return false;
+    }
+
+    public void resetMovedFlag() {
+        moveFlag = false;
     }
 }

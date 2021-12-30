@@ -77,9 +77,9 @@ public class Board implements Serializable {
             int xCounter = 0;
             for (int x = 0; x < cellField[0].length; x++) {
                 if ((y + x) % 2 == 0) {
-                    cellField[y][x] = new Cell(xCounter, yCounter, cellSize, GeneralColors.WHITE_CELL);
+                    cellField[y][x] = new Cell(y, x, xCounter, yCounter, cellSize, GeneralColors.WHITE_CELL);
                 } else {
-                    cellField[y][x] = new Cell(xCounter, yCounter, cellSize, GeneralColors.BLACK_CELL);
+                    cellField[y][x] = new Cell(y, x, xCounter, yCounter, cellSize, GeneralColors.BLACK_CELL);
                 }
 
                 xCounter += cellSize;

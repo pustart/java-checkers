@@ -19,8 +19,9 @@ public class King extends Figure {
         List<Cell> cellsToBeat = new ArrayList<>();
         boolean killFlag = false;
 
-        System.out.println("row y: " + getY());
-        System.out.println("col x: " + getX());
+        /*System.out.println("row y: " + getY());
+        System.out.println("col x: " + getX());*/
+
         //идем вправо вверх
         int x = getX() + 1;
         int y = getY() - 1;
@@ -142,5 +143,12 @@ public class King extends Figure {
         boolean kill = canKill;
         canKill = false;
         return kill;
+    }
+
+    @Override
+    public String toString() {
+        return "King{" +
+                "canKill=" + canKill +
+                '}';
     }
 }

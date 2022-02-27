@@ -35,7 +35,6 @@ public class Player {
         return Objects.hash(getCheckers(), getTeamColor());
     }
 
-    //For logs
     @Override
     public String toString() {
         return "Player{" +

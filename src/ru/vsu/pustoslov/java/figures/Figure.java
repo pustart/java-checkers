@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class Figure implements Comparable<Figure>, Serializable {
     private int x;
     private int y;
-    private CheckerColors color;
+    private final CheckerColors color;
 
     public Figure(int x, int y, CheckerColors color) {
         this.x = x;
@@ -41,7 +41,6 @@ public abstract class Figure implements Comparable<Figure>, Serializable {
     public abstract List<Cell> getPossibleMoves(Board board);
 
     public abstract boolean canBeat(Board board);
-
 
     @Override
     public int compareTo(Figure o) {

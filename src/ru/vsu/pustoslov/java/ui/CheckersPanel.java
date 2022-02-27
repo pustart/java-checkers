@@ -3,8 +3,10 @@ package ru.vsu.pustoslov.java.ui;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 import ru.vsu.pustoslov.java.board.Cell;
 import ru.vsu.pustoslov.java.colors.CheckerColors;
 import java.awt.Color;
@@ -18,19 +20,22 @@ import ru.vsu.pustoslov.java.board.Board;
 import javax.swing.JPanel;
 import ru.vsu.pustoslov.java.colors.GeneralColors;
 import ru.vsu.pustoslov.java.figures.King;
+import ru.vsu.pustoslov.java.movement.AbstractMovement;
 import ru.vsu.pustoslov.java.movement.CheckersMovement;
+import ru.vsu.pustoslov.java.movement.NetworkMovement;
 import ru.vsu.pustoslov.java.player.Player;
+import ru.vsu.pustoslov.java.server.ServerResponse;
 
 public class CheckersPanel extends JPanel implements MouseListener {
     private static final int PANEL_WIDTH = 640;
     private static final int PANEL_HEIGHT = 640;
     private int storedRow;
     private int storedCol;
-    private Player currentPlayer;
-    private final Board board;
-    private final CheckersMovement checkersMovement;
-    private final Player player1;
-    private final Player player2;
+    private Player currentPlayer = null;
+    private Board board;
+    private final AbstractMovement checkersMovement;
+    private Player player1 = null;
+    private Player player2 = null;
     private BufferedImage crownImage;
 
 
@@ -58,30 +63,53 @@ public class CheckersPanel extends JPanel implements MouseListener {
         currentPlayer = player1;
     }
 
+    public CheckersPanel(String host, int port) throws IOException {
+        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setBackground(Color.WHITE);
+
+        try {
+            crownImage = ImageIO.read(new File("src/ru/vsu/pustoslov/assets/images/crown.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        storedCol = 0;
+        storedRow = 0;
+
+        checkersMovement = new NetworkMovement(new Socket(host, port));
+        board = checkersMovement.getBoard();
+    }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("In listener");
-        int col = (e.getX()) / (board.getHeight() / 8);
-        int row = (e.getY() - 30) / (board.getWidth() / 8);
+        if (checkersMovement.isGameOver(board.getWhiteFigures(), board.getWhiteFigures())) {
+            if (checkersMovement.doesWhiteWin(board.getWhiteFigures())) {
+                JOptionPane.showMessageDialog(null, "You won!", "Game over", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "You lose!", "Game over", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            int col = (e.getX()) / (board.getHeight() / 8);
+            int row = (e.getY() - 30) / (board.getWidth() / 8);
 
-        resetHighlightedCells();
-        if (board.getCellFromBoard(row, col).hasFigure()
-                && board.getCellFromBoard(row, col).getFigure().getColor() == currentPlayer.getTeamColor()) {
-            highlightCells(board.getCellFromBoard(row, col).getFigure().getPossibleMoves(board));
+            resetHighlightedCells();
+            if (board.getCellFromBoard(row, col).hasFigure()) {
+                highlightCells(board.getCellFromBoard(row, col).getFigure().getPossibleMoves(board));
+            }
+
+            checkersMovement.beat(row, col, storedRow, storedCol, currentPlayer);
+            checkersMovement.move(row, col, storedRow, storedCol, currentPlayer);
+
+            if (checkersMovement.hasMoved()) {
+                switchPlayers();
+            }
+
+            storedRow = row;
+            storedCol = col;
+            repaint();
+            board = checkersMovement.getBoard();
         }
-
-        checkersMovement.beat(row, col, storedRow, storedCol, currentPlayer);
-        checkersMovement.move(row, col, storedRow, storedCol, currentPlayer);
-
-        if (checkersMovement.hasMoved()) {
-            System.out.println("has moved");
-            switchPlayers();
-        }
-
-        storedRow = row;
-        storedCol = col;
-        repaint();
     }
 
     @Override
@@ -91,7 +119,6 @@ public class CheckersPanel extends JPanel implements MouseListener {
         drawBoard(g2d);
     }
 
-    //todo отрисовка поля единожды, а потом только отрисовка шашек
     private void drawBoard(Graphics2D g2d) {
         for (int i = 0; i < board.getGameField().length; i++) {
             for (int j = 0; j < board.getGameField()[0].length; j++) {
@@ -136,12 +163,10 @@ public class CheckersPanel extends JPanel implements MouseListener {
 
     private void switchPlayers() {
         if (currentPlayer.equals(player1)) {
-            System.out.println("log");
             currentPlayer = player2;
         } else if (currentPlayer.equals(player2)) {
             currentPlayer = player1;
         }
-        System.out.println("Current player team color: " + currentPlayer.getTeamColor());
     }
 
     private void highlightCells(List<Cell> cells) {

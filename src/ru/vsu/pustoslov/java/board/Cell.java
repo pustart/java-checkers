@@ -25,16 +25,6 @@ public class Cell implements Serializable {
         this.cellColor = cellColor;
     }
 
-/*    public Cell(int x, int y, int height, GeneralColors cellColor, Figure figure) {
-        this.x = x;
-        this.y = y;
-        this.height = height;
-        this.width = height;
-        this.cellColor = cellColor;
-        this.figure = figure;
-    }*/
-
-    //Возможно лишний метод
     public boolean hasFigure() {
         return figure != null;
     }

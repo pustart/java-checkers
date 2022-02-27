@@ -9,8 +9,12 @@ public enum GeneralColors implements Serializable {
     HIGHLIGHTING(new Color(106, 196, 104));
 
     private final Color color;
-    GeneralColors(Color color){
+
+    GeneralColors(Color color) {
         this.color = color;
     }
-    public Color getColor(){ return color;}
+
+    public Color getColor() {
+        return color;
+    }
 }

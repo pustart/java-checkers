@@ -19,10 +19,7 @@ public class King extends Figure {
         List<Cell> cellsToBeat = new ArrayList<>();
         boolean killFlag = false;
 
-        /*System.out.println("row y: " + getY());
-        System.out.println("col x: " + getX());*/
-
-        //идем вправо вверх
+        //Go to upper right
         int x = getX() + 1;
         int y = getY() - 1;
 
@@ -49,7 +46,7 @@ public class King extends Figure {
             killFlag = false;
         }
 
-        //влево вверх
+        //Go to upper left
         x = getX() - 1;
         y = getY() - 1;
 
@@ -76,7 +73,7 @@ public class King extends Figure {
             killFlag = false;
         }
 
-        //влево вниз
+        //Go to lower left
         x = getX() - 1;
         y = getY() + 1;
 
@@ -103,7 +100,7 @@ public class King extends Figure {
             killFlag = false;
         }
 
-        //вправо вниз
+        //Go to lower right
         x = getX() + 1;
         y = getY() + 1;
 

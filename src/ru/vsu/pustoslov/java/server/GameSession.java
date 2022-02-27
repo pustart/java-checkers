@@ -1,14 +1,9 @@
 package ru.vsu.pustoslov.java.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 import ru.vsu.pustoslov.java.board.Board;
 import ru.vsu.pustoslov.java.board.Cell;
 import ru.vsu.pustoslov.java.colors.CheckerColors;
@@ -46,7 +41,7 @@ public class GameSession implements Runnable {
             throw new IllegalStateException("Cannot connect to client", ex);
         }
         try {
-            out.writeObject(board);
+            out.writeObject(new ServerResponse(GameStates.START, board));
             out.reset();
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,37 +50,28 @@ public class GameSession implements Runnable {
 
     @Override
     public void run() {
-        while (!checkersMovement.isGameOver(player1, player2)) {
-            System.out.println("---Player figures: " + player1.getCheckers() + "\n");
-            System.out.println("---Bot figures: " + player2.getCheckers());
-
+        while (!checkersMovement.isGameOver(player1.getCheckers(), player2.getCheckers())) {
+            ClientRequest clientRequest;
             Integer[] arrOfMoves = new Integer[4];
 
             try {
-                System.out.println("Into try IN");
-                arrOfMoves = (Integer[]) in.readObject();
-                System.out.println("Read array from client");
+                clientRequest = (ClientRequest) in.readObject();
+                arrOfMoves[0] = clientRequest.getRow();
+                arrOfMoves[1] = clientRequest.getCol();
+                arrOfMoves[2] = clientRequest.getStoredRow();
+                arrOfMoves[3] = clientRequest.getStoredCol();
+
+                System.out.print("Get array from client: ");
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
-            System.out.println("Client array: ");
-            Arrays.stream(arrOfMoves).forEach(System.out::println);
-
 
             checkersMovement.beat(arrOfMoves[0], arrOfMoves[1], arrOfMoves[2], arrOfMoves[3], player1);
             checkersMovement.move(arrOfMoves[0], arrOfMoves[1], arrOfMoves[2], arrOfMoves[3], player1);
 
             if (checkersMovement.hasMoved()) {
-                System.out.println("--In bot move section");
-
                 Figure figureToMove = player2.getStrategy().pickFigure(board, board.getRedFigures());
                 Cell cellToMove = player2.getStrategy().pickCellToMove(figureToMove.getPossibleMoves(board));
-
-                System.out.println("Picked figure: " + figureToMove);
-                System.out.println("Picked cell: " + cellToMove);
-                System.out.println("-------");
-
 
                 checkersMovement.beat(cellToMove.getRow(), cellToMove.getCol(), figureToMove.getY(), figureToMove.getX(), player2);
                 checkersMovement.move(cellToMove.getRow(), cellToMove.getCol(), figureToMove.getY(), figureToMove.getX(), player2);
@@ -93,15 +79,39 @@ public class GameSession implements Runnable {
             }
 
             try {
-                System.out.println("Into try OUT");
-                out.writeObject(board);
+                out.writeObject(new ServerResponse(GameStates.MOVE, board));
                 out.reset();
-                System.out.println("Post board to client\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        System.out.println("Game Over!");
+        if (checkersMovement.doesWhiteWin(player1.getCheckers())) {
+            try {
+                out.writeObject(new ServerResponse(GameStates.WIN, board));
+                out.reset();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    System.out.println("Cannot close socket: " + e.getMessage());
+                }
+            }
+        } else {
+            try {
+                out.writeObject(new ServerResponse(GameStates.LOSE, board));
+                out.reset();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    System.out.println("Cannot close socket: " + e.getMessage());
+                }
+            }
+        }
     }
 }

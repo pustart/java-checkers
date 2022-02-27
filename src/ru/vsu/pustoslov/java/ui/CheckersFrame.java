@@ -8,10 +8,22 @@ import javax.swing.JFrame;
 public class CheckersFrame extends JFrame {
     public void createFrame(){
         final CheckersPanel panel = new CheckersPanel();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Checkers");
         add(panel);
         addMouseListener(panel);
+        setFrameDefaults();
+        setVisible(true);
+    }
+
+    public void createFrame(String host, int port) throws IOException{
+        final CheckersPanel panel = new CheckersPanel(host, port);
+        add(panel);
+        addMouseListener(panel);
+        setFrameDefaults();
+        setVisible(true);
+    }
+
+    private void setFrameDefaults() {
+        setTitle("Checkers");
         pack();
         setLocationRelativeTo(null);
         try {
@@ -19,6 +31,5 @@ public class CheckersFrame extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        setVisible(true);
     }
 }

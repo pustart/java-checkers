@@ -42,7 +42,6 @@ public class Board implements Serializable {
         return gameField;
     }
 
-    //Поменять местами икс и игрек (придется поменять в checkersPanel i & j)
     public Cell getCellFromBoard(int y, int x) {
         return gameField[y][x];
     }
@@ -58,11 +57,9 @@ public class Board implements Serializable {
                     if (y < 3) {
                         redFigures.add(new Checker(x, y, CheckerColors.RED));
                         gameField[y][x].setFigure(redFigures.get(redFigures.size() - 1));
-                        //gameField[y][x].setCellStatus(CellStatus.RED);
                     } else {
                         whiteFigures.add(new Checker(x, y, CheckerColors.WHITE));
                         gameField[y][x].setFigure(whiteFigures.get(whiteFigures.size() - 1));
-                        //gameField[y][x].setCellStatus(CellStatus.WHITE);
                     }
                 }
             }
